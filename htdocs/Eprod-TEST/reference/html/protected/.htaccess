@@ -1,0 +1,3 @@
+AuthName "NSA Login TEST" 
+AuthType Basic
+require valid-user

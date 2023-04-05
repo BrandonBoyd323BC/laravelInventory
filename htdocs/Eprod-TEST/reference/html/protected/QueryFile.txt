@@ -1,0 +1,4 @@
+select * 
+from nsa.imhist 
+where DATE_CHG_QTY between '2/1/2023' and '2/15/2023' 
+and id_loc = '50'
