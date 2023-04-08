@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\ListingController;
+use App\Models\Links;
+use App\Models\Listing;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Lists;
-use App\Models\Testing;
-use App\Models\Singular;
-use Symfony\Component\Mime\Part\Multipart\AlternativePart;
+use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,34 +19,38 @@ use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', [ListingController::class, 'index']);
 
-//All Listings
-Route::get('/', function () {
-    return view('test', [
-        'heading' => 'Latest List',
-        'subHeader' => 'Under the Header',
-        'items' => Testing::all()
+Route::get('/listings/create', [ListingController::class, 'create']);
+
+Route::post('/listings', [ListingController::class, 'store']);
+
+
+
+//Single listing at the end messes up the url.
+Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
+Route::get('/links', function () {
+    return view('links', [
+        'heading' => 'Links to Sites',
+        'links' => Links::getAllLinks()
     ]);
 });
 
-// Single Listing
-Route::get('/item-view/{id}', function($id) {
-    return view('item-view', [
-        'heading' => 'This Item Number:  '.$id,
-        'list' => Testing::find($id)
-    ]);
+Route::get('/hello', function () {
+    return response('<h2>test</h2>', 200)
+        ->header('Content-Type', 'text/plain')
+        ->header('Custom-Header', 'Some Value');
 });
 
+Route::get('/posts/{id}', function ($id) {
+    return response('Post ' . $id);
+})->where('id', '[0-9]+');
 
-//Alternative Page to Test
+Route::get('/search', function (Request $request) {
+    return $request->name . ' ' . $request->city;
+});
 
-Route::get('/testing', function() {
-    return view('alternative', [
-        'heading' => 'Do the databases have to be pluralized?',
-        'answer' => "I don't understand how or why but looks like the answer is yes",
-        'testers' => Singular::all()
-    ]);
+Route::get('/welcome', function () {
+    return view('welcome');
 });
